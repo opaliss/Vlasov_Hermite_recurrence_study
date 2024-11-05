@@ -77,15 +77,15 @@ if __name__ == "__main__":
     print("runtime wall = ", end_time_wall)
 
     # make directory
-    if not os.path.exists("data/nonlinear_landau"):
-        os.makedirs("data/nonlinear_landau")
+    if not os.path.exists("data/nonlinear_landau_1024"):
+        os.makedirs("data/nonlinear_landau_1024")
 
     # save results every n steps
     skip = 10
 
     # save results
-    np.save("data/nonlinear_landau/sol_u_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), sol_midpoint_u[:, ::skip])
-    np.save("data/nonlinear_landau/sol_t_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), setup.t_vec[::skip])
+    np.save("data/nonlinear_landau_1024/sol_u_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), sol_midpoint_u[:, ::skip])
+    np.save("data/nonlinear_landau_1024/sol_t_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), setup.t_vec[::skip])
 
     # save parameters
-    np.save("data/nonlinear_landau/sol_setup_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), setup)
+    np.save("data/nonlinear_landau_1024/sol_setup_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_nu_" + str(setup.nu), setup)
