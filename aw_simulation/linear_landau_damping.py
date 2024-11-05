@@ -66,8 +66,8 @@ if __name__ == "__main__":
     # integrate (implicit midpoint)
     sol_midpoint_u, setup = implicit_midpoint_solver_FOM(y_0=y0,
                                                          right_hand_side=rhs,
-                                                         r_tol=1e-8,
-                                                         a_tol=1e-8,
+                                                         r_tol=1e-10,
+                                                         a_tol=1e-10,
                                                          max_iter=100,
                                                          param=setup,
                                                          verbose=True)
