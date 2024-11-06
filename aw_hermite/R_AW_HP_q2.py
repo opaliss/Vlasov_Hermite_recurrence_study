@@ -34,11 +34,13 @@ for Nv in np.arange(20, 30, 2):
     M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
 
     # inversion
-    R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
-
+    R_approx = sympy.simplify(sympy.simplify(M.inv(method="LDL")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    print("I successfully inverted the matrix! ")
 
     # adiabatic limit matching
     asymptotics_0 = R_approx.series(xi, 0, 4)
+    print("zeroth order is " + str(asymptotics_0.coeff(xi, 0)))
+
     sol_coeff = sympy.solve([asymptotics_0.coeff(xi, 0) + 1,
                              asymptotics_0.coeff(xi, 1) + sympy.I*sympy.sqrt(sympy.pi),
                              asymptotics_0.coeff(xi, 2) -2], [a, b, c])

@@ -8,7 +8,7 @@ import pickle
 
 # setup the number of Hermite moments
 
-for Nv in np.arange(20, 30, 2):
+for Nv in np.arange(4, 30, 2):
     # initialize the symbolic variables
     xi = sympy.symbols('xi')
     k = sympy.symbols('k', integer=True)
@@ -30,10 +30,13 @@ for Nv in np.arange(20, 30, 2):
     M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
 
     # inversion
-    R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    R_approx = sympy.simplify(sympy.simplify(M.inv(method="LDL")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    print("I successfully inverted the matrix! ")
 
     # adiabatic limit matching
-    asymptotics_0 = R_approx.series(xi, 0, 4)
+    asymptotics_0 = R_approx.series(xi, 0, 2)
+    print("zeroth order is " + str(asymptotics_0.coeff(xi, 0)))
+
     sol_coeff = sympy.solve(asymptotics_0.coeff(xi, 1) + sympy.I*sympy.sqrt(sympy.pi), c)
 
 
@@ -45,3 +48,7 @@ for Nv in np.arange(20, 30, 2):
     # save optimal R(c)
     with open("optimal_R_HP_q1/R_" + str(Nv) + ".txt", "wb") as outf:
         pickle.dump(sympy.simplify(R_approx.subs(c, sol_coeff[0])), outf)
+
+    print(sol_coeff)
+    print("completed filter operator")
+    print("Nv = ", Nv)

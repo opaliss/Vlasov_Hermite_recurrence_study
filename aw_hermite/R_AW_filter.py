@@ -10,7 +10,7 @@ import pickle
 
 
 # loop over velocity resolutions
-for Nv in np.arange(10, 14, 2):
+for Nv in np.arange(4, 14, 2):
     # symbolic variables
     xi = symbols('xi')
     # must be real and not complex
@@ -27,7 +27,7 @@ for Nv in np.arange(10, 14, 2):
     vec2 = sympy.zeros(Nv)
     for nn in range(0, Nv + 1):
         # hyper collisions coefficient
-        vec2[nn] = ((nn/(Nv-1)) ** 36) * sympy.sqrt(2) / np.sqrt(2)
+        vec2[nn] = sympy.Pow(nn/(Nv-1), 36)
         if vec2[nn] < 1e-16:
             vec2[nn] = 0
 
@@ -44,12 +44,13 @@ for Nv in np.arange(10, 14, 2):
     M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
 
     # get final response function
-    R_approx = sympy.simplify(sympy.simplify(M.inv(method="LU")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
     print("I successfully inverted the matrix! ")
 
-    asymptotics_0 = R_approx.series(xi, 0, 2)
+    asymptotics_0 = R_approx.series(xi, 0, 2, dir="+")
+    print("zeroth order is " + str(asymptotics_0.coeff(xi, 0)))
 
-    func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
+    func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 0) + 1, modules='numpy')
     sol_coeff = scipy.optimize.newton(func, x0=1, maxiter=20000, rtol=1e-3, full_output=True)
 
     # save optimal nu (for k=1)
