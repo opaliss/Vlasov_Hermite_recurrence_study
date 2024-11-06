@@ -27,7 +27,7 @@ for Nv in np.arange(10, 14, 2):
     vec2 = sympy.zeros(Nv)
     for nn in range(0, Nv + 1):
         # hyper collisions coefficient
-        vec2[nn] = sympy.Pow(nn/(Nv-1), 36) * sympy.sqrt(2) / np.sqrt(2)
+        vec2[nn] = ((nn/(Nv-1)) ** 36) * sympy.sqrt(2) / np.sqrt(2)
         if vec2[nn] < 1e-16:
             vec2[nn] = 0
 
