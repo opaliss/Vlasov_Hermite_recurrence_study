@@ -10,7 +10,7 @@ import pickle
 
 
 # loop over velocity resolutions
-for Nv in np.arange(4, 14, 2):
+for Nv in np.arange(10, 14, 2):
     # symbolic variables
     xi = symbols('xi')
     # must be real and not complex
