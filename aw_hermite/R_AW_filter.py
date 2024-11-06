@@ -45,6 +45,7 @@ for Nv in np.arange(10, 14, 2):
 
     # get final response function
     R_approx = sympy.simplify(sympy.simplify(M.inv(method="LU")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    print("I successfully inverted the matrix! ")
 
     asymptotics_0 = R_approx.series(xi, 0, 2)
 
