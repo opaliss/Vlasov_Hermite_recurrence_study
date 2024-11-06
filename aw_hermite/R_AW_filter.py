@@ -47,13 +47,13 @@ for Nv in np.arange(4, 14, 2):
     print("I successfully inverted the matrix! ")
 
     asymptotics_0 = R_approx.series(xi, 0, 2, dir="+")
-    print("zeroth order is " + str(asymptotics_0.coeff(xi, 0)))
+    print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
 
     # objective function
-    func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 0) + 1, modules='numpy')
+    func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
     # its derivative
-    func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 0) + 1, nu), modules="numpy")
-    sol_coeff = scipy.optimize.newton(func=func, x0=10, maxiter=10000, tol=1e-3, full_output=True)
+    func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), nu), modules="numpy")
+    sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=10, maxiter=10000, tol=1e-3, full_output=True)
 
     # save optimal nu (for k=1)
     with open("optimal_nu_filter/nu_" + str(Nv) + ".txt", "wb") as outf:

@@ -63,9 +63,11 @@ for Nv in np.arange(12, 22, 2):
         R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
 
         asymptotics_0 = R_approx.series(xi, 0, 2)
+        print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
 
         func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
-        sol_coeff = scipy.optimize.newton(func, x0=1, maxiter=20000, rtol=1e-3, full_output=True)
+        func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1), nu), modules="numpy")
+        sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=1, maxiter=20000, tol=1e-3, full_output=True)
 
         # save optimal nu (for k=1)
         with open("optimal_nu_hyper_" + str(alpha) + "/nu_" + str(Nv) + ".txt", "wb") as outf:
