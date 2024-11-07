@@ -1,7 +1,7 @@
 """Module to run the nonlinear Landau damping testcase
 
 Author: Opal Issan
-Date: Oct 31st, 2024
+Date: Nov 6th, 2024
 """
 import sys, os
 
@@ -28,7 +28,7 @@ def rhs(y):
 if __name__ == "__main__":
     setup = SimulationSetupFOM(Nx=100,  # spatial resolution
                                Nx_total=201,  # this is always 2Nx+1 in this code.
-                               Nv=1024,  # velocity resolution
+                               Nv=100,  # velocity resolution
                                epsilon=0.5,  # perturbation amplitude
                                alpha_e=np.sqrt(2),  # hermite scaling parameter for electrons
                                alpha_i=np.sqrt(2 / 1836),  # hermite scaling parameter for ions
