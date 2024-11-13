@@ -56,11 +56,11 @@ for Nv in np.arange(4, 14, 2):
     sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=10, maxiter=10000, tol=1e-3, full_output=True)
 
     # save optimal nu (for k=1)
-    with open("optimal_nu_filter/nu_" + str(Nv) + ".txt", "wb") as outf:
+    with open("optimal_nu_filter_Hou_Li/nu_" + str(Nv) + ".txt", "wb") as outf:
         pickle.dump(sol_coeff[0], outf)
 
     # save optimal R(nu*) (for k=1)
-    with open("optimal_R_filter/R_" + str(Nv) + ".txt", "wb") as outf:
+    with open("optimal_R_filter_Hou_Li/R_" + str(Nv) + ".txt", "wb") as outf:
         pickle.dump(sympy.simplify(R_approx.subs(nu, sol_coeff[0].real)), outf)
 
     print(sol_coeff)
