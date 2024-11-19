@@ -23,11 +23,11 @@ def factorial_ratio(num1, denom1, num2, denom2):
 
 
 # loop over velocity resolutions
-for Nv in np.arange(12, 22, 2):
+for Nv in np.arange(8, 14, 2):
     # hypercollisionality order ~ n^{2alpha -1}
     # alpha = 1 (Lenard Bernstein 1958) ~n
     # alpha = 2 (Camporeale 2006) ~n^3
-    for alpha in np.arange(1, int(np.floor(Nv/2))):
+    for alpha in [4]:
 
         # symbolic variables
         xi = symbols('xi')
@@ -60,7 +60,8 @@ for Nv in np.arange(12, 22, 2):
         M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
 
         # get final response function
-        R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+        # R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k))) # if k is not 1
+        R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2)))
 
         asymptotics_0 = R_approx.series(xi, 0, 2)
         print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
