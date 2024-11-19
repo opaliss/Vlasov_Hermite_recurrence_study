@@ -8,7 +8,8 @@ import pickle
 
 # setup the number of Hermite moments
 
-for Nv in np.arange(4, 30, 2):
+for Nv in np.arange(12, 14, 2):
+    print("Nv = ", Nv)
     # initialize the symbolic variables
     xi = sympy.symbols('xi')
     k = sympy.symbols('k', integer=True)
@@ -30,19 +31,24 @@ for Nv in np.arange(4, 30, 2):
     M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
 
     # inversion
-    R_approx = sympy.simplify(sympy.simplify(M.inv(method="LDL")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
+    cofactor = M.cofactor(0, 1)
+    determinant = M.det(method="berkowitz")
+    R_approx = sympy.simplify(cofactor / determinant / sympy.sqrt(2) * k / np.abs(k))
+    #R_approx = sympy.simplify(sympy.simplify(M.inv(method="LDL")[0, 1] / sympy.sqrt(2) * k / np.abs(k)))
     print("I successfully inverted the matrix! ")
 
     # adiabatic limit matching
-    asymptotics_0 = R_approx.series(xi, 0, 2)
-    print("zeroth order is " + str(asymptotics_0.coeff(xi, 0)))
+    asymptotics_0 = R_approx.series(xi, 0, 3)
+    print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
+    print("first order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 1))))
+    print("second order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 2))))
 
     sol_coeff = sympy.solve(asymptotics_0.coeff(xi, 1) + sympy.I*sympy.sqrt(sympy.pi), c)
-
+    print("sol coeff = ", complex(sol_coeff[0]))
 
     # save optimal (c)
     with open("optimal_q1_HP/coeff_" + str(Nv) + ".txt", "wb") as outf:
-        pickle.dump(sol_coeff[0].evalf(), outf)
+        pickle.dump(complex(sol_coeff[0]), outf)
 
 
     # save optimal R(c)
@@ -50,5 +56,3 @@ for Nv in np.arange(4, 30, 2):
         pickle.dump(sympy.simplify(R_approx.subs(c, sol_coeff[0])), outf)
 
     print(sol_coeff)
-    print("completed filter operator")
-    print("Nv = ", Nv)

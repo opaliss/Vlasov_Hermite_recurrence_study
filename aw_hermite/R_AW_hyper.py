@@ -23,11 +23,13 @@ def factorial_ratio(num1, denom1, num2, denom2):
 
 
 # loop over velocity resolutions
-for Nv in np.arange(10, 14, 2):
-    # hypercollisionality order ~ n^{2alpha -1}
+for Nv in np.arange(12, 14, 2):
+    # hypercollisionality order ~n^{2alpha -1}
     # alpha = 1 (Lenard Bernstein 1958) ~n
-    # alpha = 2 (Camporeale 2006) ~n^3
-    for alpha in [4]:
+    # alpha = 2 (Camporeale 2016) ~n^3
+    for alpha in range(1, int(Nv/2) + 1):
+        print("Nv = ", Nv)
+        print("alpha = ", alpha)
 
         # symbolic variables
         xi = symbols('xi')
@@ -64,16 +66,29 @@ for Nv in np.arange(10, 14, 2):
 
         # get final response function
         # R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k))) # if k is not 1
-        R_approx = sympy.simplify(sympy.simplify(M.inv('LU')[0, 1] / sympy.sqrt(2)))
+        # R_approx = sympy.simplify(sympy.simplify(M.inv("QR")[0, 1] / sympy.sqrt(2)))
+        cofactor = M.cofactor(0, 1)
+        determinant = M.det(method="berkowitz")
+        R_approx = sympy.simplify(cofactor / determinant / sympy.sqrt(2))
 
         asymptotics_0 = R_approx.series(xi, 0, 3)
         print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
         print("first order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 1))))
         print("second order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 2))))
 
-        func = sympy.lambdify(nu, abs(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi)), modules='numpy')
+        func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
         func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1), nu), modules="numpy")
-        sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=1, maxiter=20000, tol=1e-3, full_output=True)
+        func_prime2 = sympy.lambdify(nu, sympy.diff(sympy.diff(asymptotics_0.coeff(xi, 1), nu), nu), modules="numpy")
+        sol_coeff = scipy.optimize.newton(func=func,
+                                          fprime=func_prime,
+                                          fprime2=func_prime2,
+                                          x0=1,
+                                          maxiter=20000,
+                                          tol=1e-8,
+                                          full_output=True)
+        print("residual = ", np.abs(func(sol_coeff[0])))
+        # sol_coeff = sympy.solve(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), nu)
+
 
         # save optimal nu (for k=1)
         with open("optimal_nu_hyper_" + str(alpha) + "/nu_" + str(Nv) + ".txt", "wb") as outf:
@@ -81,9 +96,7 @@ for Nv in np.arange(10, 14, 2):
 
         # save optimal R(nu*) (for k=1)
         with open("optimal_R_hyper_" + str(alpha) + "/R_" + str(Nv) + ".txt", "wb") as outf:
-            pickle.dump(sympy.simplify(R_approx.subs(nu, sol_coeff[0].real)), outf)
+            pickle.dump(sympy.simplify(R_approx.subs(nu, sol_coeff[0])), outf)
 
         print(sol_coeff)
         print("completed hypercollisional operator")
-        print("Nv = ", Nv)
-        print("alpha = ", alpha)
