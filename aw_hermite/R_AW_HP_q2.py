@@ -47,7 +47,7 @@ for Nv in np.arange(20, 30, 2):
 
     # save optimal (a, b, c)
     with open("optimal_q2_HP/coeff_" + str(Nv) + ".txt", "wb") as outf:
-        pickle.dump(sol_coeff[0], outf)
+        pickle.dump(sol_coeff[0].evalf(), outf)
 
     # save optimal R(a, b, c)
     with open("optimal_R_HP_q2/R_" + str(Nv) + ".txt", "wb") as outf:

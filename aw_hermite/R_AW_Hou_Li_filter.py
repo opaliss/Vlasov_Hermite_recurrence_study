@@ -50,7 +50,7 @@ for Nv in np.arange(4, 14, 2):
     print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
 
     # objective function
-    func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
+    func = sympy.lambdify(nu, abs(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi)), modules='numpy')
     # its derivative
     func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), nu), modules="numpy")
     sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=10, maxiter=10000, tol=1e-3, full_output=True)

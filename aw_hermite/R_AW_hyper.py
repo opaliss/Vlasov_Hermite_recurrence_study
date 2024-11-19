@@ -54,19 +54,22 @@ for Nv in np.arange(8, 14, 2):
         A = banded({1: tuple(vec[0, :-1]), -1: tuple(vec[0, :-1]), 0: tuple(nu * vec2[0, :] / (sympy.I * sympy.sqrt(2) * k))})
 
         # identity matrix
-        I = sympy.eye(Nv, dtype=int)
+        I = sympy.ImmutableSparseMatrix(sympy.eye(Nv))
 
         # invert matrix
-        M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
+        # M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)
+        M = sympy.SparseMatrix(I * xi - A)
 
         # get final response function
         # R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k))) # if k is not 1
         R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2)))
 
-        asymptotics_0 = R_approx.series(xi, 0, 2)
+        asymptotics_0 = R_approx.series(xi, 0, 3)
         print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))
+        print("first order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 1))))
+        print("second order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 2))))
 
-        func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
+        func = sympy.lambdify(nu, abs(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi)), modules='numpy')
         func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1), nu), modules="numpy")
         sol_coeff = scipy.optimize.newton(func=func, fprime=func_prime, x0=1, maxiter=20000, tol=1e-3, full_output=True)
 
