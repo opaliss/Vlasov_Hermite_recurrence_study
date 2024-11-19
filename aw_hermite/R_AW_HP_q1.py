@@ -24,7 +24,7 @@ for Nv in np.arange(4, 30, 2):
     A[-1, Nv - 1] += sympy.I * c * sympy.sqrt(Nv) / sympy.sqrt(2) * k / np.abs(k)
 
     # identity matrix
-    I = sympy.eye(Nv, dtype=int)
+    I = sympy.ImmutableSparseMatrix(sympy.eye(Nv))
 
     # eigenvalue matrix
     M = sympy.SparseMatrix(I * xi - k / np.abs(k) * A)

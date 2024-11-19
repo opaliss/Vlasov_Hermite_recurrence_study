@@ -23,7 +23,7 @@ def factorial_ratio(num1, denom1, num2, denom2):
 
 
 # loop over velocity resolutions
-for Nv in np.arange(8, 14, 2):
+for Nv in np.arange(10, 14, 2):
     # hypercollisionality order ~ n^{2alpha -1}
     # alpha = 1 (Lenard Bernstein 1958) ~n
     # alpha = 2 (Camporeale 2006) ~n^3
@@ -45,7 +45,9 @@ for Nv in np.arange(8, 14, 2):
         vec2 = sympy.zeros(Nv)
         for nn in range(0, Nv + 1):
             # hyper collisions coefficient
-            vec2[nn] = factorial_ratio(num1=nn, denom1=nn-2*alpha+1, num2=Nv-2*alpha, denom2=Nv-1)
+            const = factorial_ratio(num1=nn, denom1=nn-2*alpha+1, num2=Nv-2*alpha, denom2=Nv-1)
+            if const != 0:
+                vec2[nn] = const
 
         # enforce k=1 for simplicity now
         k = 1
@@ -62,7 +64,7 @@ for Nv in np.arange(8, 14, 2):
 
         # get final response function
         # R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2) * k / np.abs(k))) # if k is not 1
-        R_approx = sympy.simplify(sympy.simplify(M.inv()[0, 1] / sympy.sqrt(2)))
+        R_approx = sympy.simplify(sympy.simplify(M.inv('LU')[0, 1] / sympy.sqrt(2)))
 
         asymptotics_0 = R_approx.series(xi, 0, 3)
         print("zeroth order is " + str(sympy.simplify(asymptotics_0.coeff(xi, 0))))

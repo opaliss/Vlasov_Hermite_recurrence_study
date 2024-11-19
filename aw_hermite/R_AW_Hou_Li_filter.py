@@ -37,7 +37,7 @@ for Nv in np.arange(4, 14, 2):
                       0: tuple(nu * vec2[0, :] / sympy.I)})
 
     # identity matrix
-    I = sympy.eye(Nv)
+    I = sympy.ImmutableSparseMatrix(sympy.eye(Nv))
 
     # invert matrix
     M = sympy.simplify(sympy.SparseMatrix(I * xi - A))
