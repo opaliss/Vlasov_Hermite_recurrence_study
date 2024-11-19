@@ -23,7 +23,7 @@ def factorial_ratio(num1, denom1, num2, denom2):
 
 
 # loop over velocity resolutions
-for Nv in np.arange(12, 14, 2):
+for Nv in np.arange(4, 14, 2):
     # hypercollisionality order ~n^{2alpha -1}
     # alpha = 1 (Lenard Bernstein 1958) ~n
     # alpha = 2 (Camporeale 2016) ~n^3
@@ -79,24 +79,28 @@ for Nv in np.arange(12, 14, 2):
         func = sympy.lambdify(nu, asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), modules='numpy')
         func_prime = sympy.lambdify(nu, sympy.diff(asymptotics_0.coeff(xi, 1), nu), modules="numpy")
         func_prime2 = sympy.lambdify(nu, sympy.diff(sympy.diff(asymptotics_0.coeff(xi, 1), nu), nu), modules="numpy")
-        sol_coeff = scipy.optimize.newton(func=func,
-                                          fprime=func_prime,
-                                          fprime2=func_prime2,
-                                          x0=1,
-                                          maxiter=20000,
-                                          tol=1e-8,
-                                          full_output=True)
-        print("residual = ", np.abs(func(sol_coeff[0])))
-        # sol_coeff = sympy.solve(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), nu)
+        # sol_coeff = scipy.optimize.newton(func=func,
+        #                                   fprime=func_prime,
+        #                                   fprime2=func_prime2,
+        #                                   x0=1,
+        #                                   maxiter=20000,
+        #                                   tol=1e-8,
+        #                                   full_output=True)
 
+        # print("residual = ", np.abs(func(sol_coeff[0])))
+        # sol_coeff = sympy.solve(asymptotics_0.coeff(xi, 1) + sympy.I * sympy.sqrt(sympy.pi), nu)
+        nu_vec = np.linspace(0, 100, int(1e5))
+        func_eval = func(nu_vec)
+        sol_coeff = nu_vec[np.min(np.where(np.abs(func_eval) < 1e-3))]
+        print("collisional frequency = ", sol_coeff)
 
         # save optimal nu (for k=1)
         with open("optimal_nu_hyper_" + str(alpha) + "/nu_" + str(Nv) + ".txt", "wb") as outf:
-            pickle.dump(sol_coeff[0], outf)
+            pickle.dump(sol_coeff, outf)
 
         # save optimal R(nu*) (for k=1)
         with open("optimal_R_hyper_" + str(alpha) + "/R_" + str(Nv) + ".txt", "wb") as outf:
-            pickle.dump(sympy.simplify(R_approx.subs(nu, sol_coeff[0])), outf)
+            pickle.dump(sympy.simplify(R_approx.subs(nu, sol_coeff)), outf)
 
         print(sol_coeff)
         print("completed hypercollisional operator")
