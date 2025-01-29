@@ -1,4 +1,4 @@
-## Effects of Artificial Collisions, Filtering, and Nonlocal Closure Approaches on Hermite-based Vlasov-Poisson Simulations
+## [Effects of Artificial Collisions, Filtering, and Nonlocal Closure Approaches on Hermite-based Vlasov-Poisson Simulations](https://arxiv.org/pdf/2412.07073)
 
 
 ### Python Dependencies

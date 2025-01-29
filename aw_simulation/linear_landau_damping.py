@@ -1,7 +1,7 @@
 """Module to run the linear Landau damping testcase
 
 Author: Opal Issan
-Date: Oct 1st, 2024
+Date: Jan 27th, 2025
 """
 import sys, os
 
@@ -28,7 +28,7 @@ def rhs(y):
 if __name__ == "__main__":
     setup = SimulationSetupFOM(Nx=10,
                                Nx_total=21,
-                               Nv=100,
+                               Nv=1024,
                                epsilon=1e-2,
                                alpha_e=np.sqrt(2),
                                alpha_i=np.sqrt(2 / 1836),
