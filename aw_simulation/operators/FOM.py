@@ -161,6 +161,27 @@ def A_matrix_off(M0, MF, D, closure_type="truncation"):
         return A_off
 
 
+def A_matrix_klimas(M0, MF, D, closure_type="truncation"):
+    """A matrix off-diagonal components in linear advection term
+
+    :param M0: matrix 0th index
+    :param MF: matrix final index
+    :param D: matrix, diagonal matrix with Fourier derivative coefficients
+    :param closure_type: str, type of closure used, e.g. "truncation"
+    :return: 2D matrix, A matrix in linear advection term
+    """
+    A = np.zeros((MF - M0, MF - M0), dtype="complex128")
+    for ii, n in enumerate(range(M0, MF)):
+        if n != M0:
+            # lower diagonal
+            A[ii, ii - 1] = np.sqrt(n)
+    if closure_type == "truncation":
+        return scipy.sparse.kron(A, D, format="csr")
+    else:
+        return print("no other closure is implemented here")
+
+
+
 def k_matrix(Nx):
     """matrix for Hammett-Perkins style closure term
 

@@ -28,7 +28,7 @@ def rhs(y):
 if __name__ == "__main__":
     setup = SimulationSetupFOM(Nx=10,
                                Nx_total=21,
-                               Nv=1024,
+                               Nv=200,
                                epsilon=1e-2,
                                alpha_e=np.sqrt(2),
                                alpha_i=np.sqrt(2 / 1836),
@@ -37,9 +37,10 @@ if __name__ == "__main__":
                                L=4 * np.pi,
                                dt=1e-2,
                                T0=0,
-                               T=40,
+                               T=100,
                                nu=0,
                                hyper_rate=None,
+                               v0=None,
                                col_type="collisionless",
                                closure_type="truncation")
 
@@ -83,8 +84,8 @@ if __name__ == "__main__":
         os.makedirs("data/linear_landau")
 
     # save results
-    np.save("data/linear_landau/sol_u_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate), sol_midpoint_u)
-    np.save("data/linear_landau/sol_t_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate), setup.t_vec)
+    np.save("data/linear_landau/sol_u_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_" + str(setup.v0), sol_midpoint_u)
+    np.save("data/linear_landau/sol_t_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_" + str(setup.v0), setup.t_vec)
 
     # save parameters
-    np.save("data/linear_landau/sol_setup_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate), setup)
+    np.save("data/linear_landau/sol_setup_" + str(setup.Nv) + "_closure_" + str(setup.closure_type) + "_collisions_" + str(setup.col_type) + "_" + str(setup.hyper_rate) + "_" + str(setup.v0), setup)
